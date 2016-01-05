@@ -106,9 +106,6 @@ void loop() {
 
   if (digitalRead(trollbutton) == LOW) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Trollolol");
-    Serial.println(playlist);
-    Serial.println(insertcommand);
-    Serial.println(troll);
     getPage(playlist, insertcommand, troll);
     getPage(playlist, jumpcommand , emptypar);
     delay(450); // delay to prevent way to many trolls
