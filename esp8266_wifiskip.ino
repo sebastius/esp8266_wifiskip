@@ -1,6 +1,7 @@
 /*
    Wifiskip
    revspace.nl/Wifiskip
+   github.com/sebastius/esp8266_wifiskip
 
    by Sebastius
 
@@ -32,6 +33,9 @@ const int squeeze_port = 80;
 const char player[] = "be%3Ae0%3Ae6%3A04%3A46%3A38"; // klusbunker
 
 // strings for jukebox
+// Maybe encoding is needed: / -> %2F , ? -> %3F , = -> %3D, & -> %26
+// see http://www.w3schools.com/tags/ref%5Furlencode.asp
+
 const char playlist[] = "playlist";
 const char mixer[] = "mixer";
 const char jumpcommand[] = "jump";
@@ -133,10 +137,13 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
     return false;
   }
   // Make an HTTP GET request
+   // Maybe encoding is needed: / -> %2F , ? -> %3F , = -> %3D, & -> %26
+   // see http://www.w3schools.com/tags/ref%5Furlencode.asp
+ 
   yield();
-  client.print("GET /Classic/status_header.html?p0=");
+  client.print("GET /Classic/status_header.html?p0="); 
   client.print(p0);
-  client.print("&p1=");
+  client.print("&p1="); 
   client.print(p1);
   client.print("&p2=");
   client.print(p2);
