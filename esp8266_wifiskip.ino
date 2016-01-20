@@ -65,11 +65,12 @@ void setup() {
 }
 
 void loop() {
-
+  yield();
+  
   if (digitalRead(skipbutton) == LOW) { // Normally Open button, so when tied to ground (LOW) button is pressed)
     Serial.println("Skip");
     getPage(playlist, jumpcommand , emptypar);
-    delay(450); // delay to prevent way to many skips
+    delay(250); // delay to prevent way to many skips
     // An ugly check to see if the skipbutton is still pressed after 3 seconds.
     // Then load a new randomized playlist to the player.
     // Did the staircase "if" to be more responsive after a button press, otherwise the skip button would be disabled for 3 seconds!
@@ -84,27 +85,27 @@ void loop() {
     }
   }
 
-  if (digitalRead(volhighbutton) == LOW) { // HIGH because i use Normaly Close instead of NOpen buttons)
+  if (digitalRead(volhighbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Volume HIGH");
     getPage(mixer, volume , highvolume);
-    delay(50); // delay to slow down volume-change
+    delay(100); // delay to slow down volume-change
   }
 
-  if (digitalRead(vollowbutton) == LOW) { // HIGH because i use Normaly Close instead of NOpen buttons)
+  if (digitalRead(vollowbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Volume Low");
     getPage(mixer, volume , lowvolume);
-    delay(50); // delay to slow down volume-change
+    delay(100); // delay to slow down volume-change
   }
 
-  if (digitalRead(stopbutton) == LOW) { // HIGH because i use Normaly Close instead of NOpen buttons)
+  if (digitalRead(stopbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     //stop
 
     Serial.println("Stop");
     getPage(stopcommand, emptypar , emptypar);
-    delay(50); // delay to 'debounce' stop
+    delay(250); // delay to 'debounce' stop
   }
 
-  if (digitalRead(trollbutton) == LOW) { // HIGH because i use Normaly Close instead of NOpen buttons)
+  if (digitalRead(trollbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Trollolol");
     getPage(playlist, insertcommand, troll);
     getPage(playlist, jumpcommand , emptypar);
@@ -132,8 +133,8 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
   if ( !client.connect(http_site, http_port) ) {
     return false;
   }
-
   // Make an HTTP GET request
+  yield();
   client.print("GET /Classic/status_header.html?p0=");
   client.print(p0);
   client.print("&p1=");
@@ -143,11 +144,12 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
   client.print("&player=");
   client.print(player);
   client.println (" HTTP/1.1");
+  yield();
   client.print("Host: ");
   client.println(http_site);
   client.println("Connection: close");
   client.println();
-  delay(50);
+  yield();
   Serial.println("Message sent.");
 
   return true;
@@ -157,17 +159,19 @@ bool newrandomplaylist() {
   if ( !client.connect(http_site, http_port) ) {
     return false;
   }
-
   // Make an HTTP GET request
+  yield();
   client.print("GET /Classic/plugins/RandomPlay/mix.html?type=track&player=");
   client.print(player);
   client.print("&addOnly=0");
   client.println (" HTTP/1.1");
+  yield();
   client.print("Host: ");
   client.println(http_site);
   client.println("Connection: close");
   client.println();
-  delay(50);
+  yield();
+
   Serial.println("Message sent.");
   return true;
 }
