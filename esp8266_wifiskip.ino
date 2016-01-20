@@ -26,8 +26,8 @@ const char pass[] = "";
 WiFiClient client;
 
 // Squeeze information
-const char http_site[] = "jukebox.space.revspace.nl";
-const int http_port = 80;
+const char squeeze_site[] = "jukebox.space.revspace.nl";
+const int squeeze_port = 80;
 // const char player[] = "d8%3Ad3%3A85%3A17%3A30%3A9c"; // bar sparkshack
 const char player[] = "be%3Ae0%3Ae6%3A04%3A46%3A38"; // klusbunker
 
@@ -36,10 +36,10 @@ const char playlist[] = "playlist";
 const char mixer[] = "mixer";
 const char jumpcommand[] = "jump";
 const char stopcommand[] = "stop";
-const char emptypar[] = "%2B1";
+const char plusone[] = "%2B1";
 const char volume[] = "volume";
-const char highvolume[] = "%2B5";
-const char lowvolume[] = "-5";
+const char plusfive[] = "%2B5";
+const char minusfive[] = "-5";
 const char insertcommand[] = "insert";
 const char troll[] = "file%3A%2F%2F%2Fmusic%2FLosse%20Tracks%2Ftroll.mp3";
 
@@ -69,7 +69,7 @@ void loop() {
   
   if (digitalRead(skipbutton) == LOW) { // Normally Open button, so when tied to ground (LOW) button is pressed)
     Serial.println("Skip");
-    getPage(playlist, jumpcommand , emptypar);
+    getPage(playlist, jumpcommand , plusone);
     delay(250); // delay to prevent way to many skips
     // An ugly check to see if the skipbutton is still pressed after 3 seconds.
     // Then load a new randomized playlist to the player.
@@ -87,28 +87,27 @@ void loop() {
 
   if (digitalRead(volhighbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Volume HIGH");
-    getPage(mixer, volume , highvolume);
+    getPage(mixer, volume , plusfive);
     delay(100); // delay to slow down volume-change
   }
 
   if (digitalRead(vollowbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Volume Low");
-    getPage(mixer, volume , lowvolume);
+    getPage(mixer, volume, minusfive);
     delay(100); // delay to slow down volume-change
   }
 
   if (digitalRead(stopbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     //stop
-
     Serial.println("Stop");
-    getPage(stopcommand, emptypar , emptypar);
+    getPage(stopcommand, plusone, plusone);
     delay(250); // delay to 'debounce' stop
   }
 
   if (digitalRead(trollbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
     Serial.println("Trollolol");
     getPage(playlist, insertcommand, troll);
-    getPage(playlist, jumpcommand , emptypar);
+    getPage(playlist, jumpcommand , plusone);
     delay(450); // delay to prevent way to many trolls
   }
 }
@@ -130,7 +129,7 @@ void connectWiFi() {
 
 // Perform an HTTP GET request to a remote page
 bool getPage(const char *p0, const char *p1, const char *p2) {
-  if ( !client.connect(http_site, http_port) ) {
+  if ( !client.connect(squeeze_site, squeeze_port) ) {
     return false;
   }
   // Make an HTTP GET request
@@ -146,7 +145,7 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
   client.println (" HTTP/1.1");
   yield();
   client.print("Host: ");
-  client.println(http_site);
+  client.println(squeeze_site);
   client.println("Connection: close");
   client.println();
   yield();
@@ -156,7 +155,7 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
 }
 
 bool newrandomplaylist() {
-  if ( !client.connect(http_site, http_port) ) {
+  if ( !client.connect(squeeze_site, squeeze_port) ) {
     return false;
   }
   // Make an HTTP GET request
@@ -167,7 +166,7 @@ bool newrandomplaylist() {
   client.println (" HTTP/1.1");
   yield();
   client.print("Host: ");
-  client.println(http_site);
+  client.println(squeeze_site);
   client.println("Connection: close");
   client.println();
   yield();
