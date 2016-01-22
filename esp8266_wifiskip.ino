@@ -16,8 +16,8 @@
 
 // Pin definitions
 const int skipbutton = 0;
-const int volhighbutton = 12;
-const int vollowbutton = 13;
+const int volhighbutton = 13;
+const int vollowbutton = 14;
 const int stopbutton = 5;
 const int trollbutton = 4;
 
@@ -29,12 +29,8 @@ WiFiClient client;
 // Squeeze information
 const char squeeze_site[] = "jukebox.space.revspace.nl";
 const int squeeze_port = 80;
-// const char player[] = "d8%3Ad3%3A85%3A17%3A30%3A9c"; // bar sparkshack
-const char player[] = "be%3Ae0%3Ae6%3A04%3A46%3A38"; // klusbunker
-
-// strings for jukebox
-// Maybe encoding is needed: / -> %2F , ? -> %3F , = -> %3D, & -> %26
-// see http://www.w3schools.com/tags/ref%5Furlencode.asp
+const char player[] = "d8%3Ad3%3A85%3A17%3A30%3A9c"; // bar sparkshack
+// const char player[] = "be%3Ae0%3Ae6%3A04%3A46%3A38"; // klusbunker
 
 const char playlist[] = "playlist";
 const char mixer[] = "mixer";
@@ -54,6 +50,12 @@ void setup() {
   pinMode(stopbutton, INPUT);
   pinMode(trollbutton, INPUT);
 
+  digitalWrite(skipbutton, HIGH);
+  digitalWrite(volhighbutton, HIGH);
+  digitalWrite(vollowbutton, HIGH);
+  digitalWrite(stopbutton, HIGH);
+  digitalWrite(trollbutton, HIGH);
+  
   Serial.begin(115200);
   Serial.println();
   Serial.println("Revspace WiFi SKIP for Squeezer");
@@ -137,9 +139,6 @@ bool getPage(const char *p0, const char *p1, const char *p2) {
     return false;
   }
   // Make an HTTP GET request
-   // Maybe encoding is needed: / -> %2F , ? -> %3F , = -> %3D, & -> %26
-   // see http://www.w3schools.com/tags/ref%5Furlencode.asp
- 
   yield();
   client.print("GET /Classic/status_header.html?p0="); 
   client.print(p0);
