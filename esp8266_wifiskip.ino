@@ -103,7 +103,7 @@ void loop() {
     delay(100); // delay to slow down volume-change
   }
 
-  if (digitalRead(stopbutton) == HIGH) { // HIGH because i use Normaly Close instead of NOpen buttons)
+  if (digitalRead(stopbutton) == LOW) {
     //stop
     Serial.println("Stop");
     getPage(stopcommand, plusone, plusone);
